@@ -9,6 +9,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{titlesec}
+\usepackage{float}
 %\usepackage{CJKnumb}
 \setCJKmainfont{WenQuanYi Micro Hei}
 \setmainfont{Times New Roman}
@@ -27,8 +28,11 @@ rulesepcolor=\color{red!20!green!20!blue!20}%,
 }
 %\titleformat{\chapter}{\Large}{第\,\CJKnumber{\thechapter}\,章}{1em}{}
 %\titleformat{\section}{\large}{第\,\CJKnumber{\thesection}\,节}{1em}{}
-\titleformat{\chapter}{\Large}{第\,\thechapter\,章}{1em}{}
-\titleformat{\section}{\large}{第\,\thesection\,节}{1em}{}
+
+\titleformat{\chapter}{\Large}{\underline{第\,\thechapter\,章}}{0em}{\underline}
+
+
+\titleformat{\section}{\large}{第\,\thesection\,节}{0em}{}
 
 \begin{document}%主体文档开始
 \fancyhf{}
