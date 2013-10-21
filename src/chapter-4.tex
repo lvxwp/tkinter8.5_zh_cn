@@ -1,0 +1,163 @@
+%第四章
+\chapter[布局管理]{布局管理}
+接下来我们将讲讲控件，组成程序图形界面的“积木块”。怎样布置控件到窗口中？
+尽管在\textit{Tkinter}中有三种不同“图形管理器”，但是笔者特别愿意用.grid()图形管理器来布局。这个管理将所有的窗口或框架当做一个表---有行和列的网格。
+\begin{itemize}
+\item
+单元格是一行和一列的交叉区域。
+\item
+每列最宽的单元格的宽度是该列的列宽。
+\item
+每行最高的单元格的高度是该行的行高。
+\item
+控件不可能完全充满单元格的所有空间，你可以对单元格进行指定。你既可以不调整控件外的多余控件，也可以伸展水平方位或垂直方位来使控件填满单元格。
+\item
+你可以将多个单元格合并生成一个大单元格。
+\end{itemize}
+当你创建了一个控件，除非你在图形管理器中注册了它否则它将不显示。因此，构造和放置控件的两个步骤进行如下：
+\begin{lstlisting}[language=python]
+self.thing = tk.Constructor(parent, ...)
+self.thing.grid(...)
+\end{lstlisting}
+\textit{Constructor}是如按钮、框架等控件的类，\textit{Parent}是将被构造的子类控件的父类控件。所有的控件都有.grid()方法，你可以使用它来告诉图形管理器怎么放置控件。
+
+%第4.1节
+\section[.grid()方法]{.grid()方法}
+将一个控件\textit{W}显示到程序窗口中：
+\begin{lstlisting}[language=python]
+w.grid(option=value, ...)
+\end{lstlisting}
+该方法在图形管理器中注册了一个控件\textit{w}---如果不这么做，控件将只存在内部不会显示出来。见表一“.grid()图形管理器参数”：
+\begin{longtable}{|l|p{0.85\textwidth}|}
+
+\hline
+\textsf
+column &
+控件放置的列数，从0开始计算。默认值是0。\\ \hline
+columnspan & 
+通常一个控件只占据网格中的一个单元格。然而，你可以选取行中的多个单元格，并在columnspan选项中设置单元格的数量来整合他们到一个大单元格。例如，\textit{w}.grid(row=0,column=2,columnspan=3)，例中将会把\textit{w}控件放置在一个横跨0行2，3，4列的一个单元格中。\\ \hline
+in\_ &
+注册\textit{w}作为某个控件如\textit{w$_2$}的子类，用法in\_=\textit{w$_2$}。当\textit{w}被创建时，新的\textit{w$_2$}控件必须作为\textit{parent}控件的子类来使用。\\ \hline
+ipadx &
+内部x padding。这个维度是增加控件内部左边和右边。\\ \hline
+ipady &
+内部y padding。这个维度是增加控件内部顶部和底部。\\ \hline
+padx &
+外部x padding。这个维度是增加控件外部左边和右边。\\ \hline
+pady &
+外部y padding。这个维度是增加控件上部和下部。\\ \hline
+row &
+你想把控件插入的行数，从0计数。默认是下一个更高的未被占用的行。\\ \hline
+rowspan &
+通常一个控件只占据网格的一个单元格。你可以选取列内的多个单元格，然后，给选中的单元格设置rowspan选项。本选项和columnspan选项结合使用来抓取一块单元格。例子，\textit{w}.grid(row=3,column=2,rowspan=4,columnspan=5)例中将\textit{w}微件放入一个由3-6列2-6行组成的区域中。\\ \hline
+sticky &
+本项决定怎样分配单元格中的微件所占空间之外的空间。见下。\\ \hline
+\end{longtable}
+
+\begin{itemize}
+\item 如果未设置sticky属性，默认会将微件在单元格中居中放置。
+
+\item 你可以使用sticky=NE（右上），SE（右下），SW（左下），或者NW（左上）来布局微件到单元格的四角。
+
+\item 你可以使用sticky=N（中上），E（中右），S（中下），或者W（中左）来布局微件到一边的相对中间。
+
+\item 使用sticky=N+S垂直扩展微件但让它水平居中。
+
+\item 使用sticky=E+W水平扩展微件但让它垂直居中。
+
+\item 使用sticky=N+E+S+W在水平和垂直方位来扩展微件填充单元格。
+
+\item 其它的组合也可使用。例如，sticky=N+S+W将垂直扩展微件并放置微件在相对东（左）边。
+\end{itemize}
+
+%第4.2章
+\section{其它grid管理方法}
+这些grid相关的方法在所有控件上都有定义：
+\subsection*{\textsf{\textit{w}.grid\_bbox ( column=None, row=None, col2=None, row2=None )}}
+\par{返回一个四元组描述微件w中一些或所有grid系统的边界框。前两个数字返回左上角区域的x和y坐标，后两个数字是宽和高。}
+\par{如果你传递行和列变量，返回的限定框描述所在行和列的单元格的区域。如果你也传递了col2和row2参数，返回的限定框描述包含从行column到col2，列row到row2的区域。}
+\par{例如，w.grid\_bbox(0,0,1,1)返回四个单元格的限定框，不是一个。}
+
+\subsection*{\textsf{\textit{w}.grid\_forget()}}
+\par{本方法使微件w从屏幕上消失。它还存在，只是不可见。你可以使用.grid()使它再次显示，但是它将不会记住它的grid选项。}
+
+\subsection*{\textsf{\textit{w}.grid\_info()}}
+\par{返回一个键为w微件选项名字的字典，以及这些选项相应的值。}
+
+\subsection*{\textsf{\textit{w}.grid\_location (x,y)}}
+\par{赋予关联的包含的微件一个坐标，本方法返回一个数组（col,row）描述w微件的网格系统的单元格包含的屏幕坐标。}
+
+\subsection*{\textsf{\textit{w}.grid\_propagate()}}
+\par{通常，所有微件传送他们的尺寸，意味着他们调节来适应内容。然而，有时你想约束一个微件到确定的尺寸，忽略它内容的尺寸，这样做，调用w.grid\_propagate(0)限制w微件的尺寸。}
+
+\subsection*{\textsf{\textit{w}.grid\_remove()}}
+\par{本方法类似.grid\_forget() ，但是它的grid选项会记住 ，所以如果你再.grid()它 ，它将会使用相同的grid配置选项。}
+
+\subsection*{\textsf{\textit{w}.grid\_size()}}
+\par{分别在w微件grid系统中返回一个包含行数和列数的二元组。}
+
+\subsection*{\textsf{\textit{w}.grid\_slaves ( row=None, column=None )}}
+\par{返回由微件w管理的微件的目录。如果没有提供参数，你将会获得所有被管理的微件的目录。使用row=参数只选择一列微件，或者使用column=参数只选择一行的微件。}
+
+%第4.3章
+\section{配置列和行的尺寸}
+除非你采取确切的措施，网格列内的微件宽将会等于它的最大宽度，并且网格行内的控件高将会是最高的单元格的高。控件里的sticky属性只控制控件被放置的地方如果所在单元格未被完全填充满。
+
+\subsection*{\textsf{\textit{w}.columnconfigure ( N, option=value,...)}}
+\par{w微件的网格层中， 配置column N以便所给选项有所给的值。对于选项，请看下表。}
+
+\subsection*{\textsf{\textit{w}.rowconfigure ( N, option=value, … )}}
+\par{w微件的网格层中，配置row N以便所给的选项有所给的值。对于选项，请看下表。}
+
+以下是用来配置column和row尺寸的选项。\\
+\begin{tabular}{|l|p{0.85\textwidth}|}
+\hline
+minsize&
+以像素为最小单位，列和行的最小尺寸。如果列内或行内没有内容，它将不会显示即使你使用了这一选项\\ \hline
+pad&
+若干像素将会被加入所给的列或行，及以上的列或行中最大的单元格。\\ \hline
+weight&
+为了使一列或一行可伸展，当重新分配额外的空间时，使用此选项并提供一个值，赋予该列或行相对权重。例如，如果一个微件w包含一个网格层，这些行将会分配3/4的额外空间到第一列及1/4到第二列：
+\begin{lstlisting}[language=python]
+w.columnconfigure(0, weight=3)
+w.columnconfigure(1, weight=1)
+\end{lstlisting}
+如果没有使用此项，列或行将不会伸展。\\ \hline
+\end{tabular}
+
+%第4.4章
+\section{让根窗口可重组}
+你想让用户能调整你的整个程序窗口大小，并将空出的控件分配给内部的控件吗？只需普通的几个操作就能实现。
+
+这需要用到行和列尺寸管理的方法，在第4.3小节已经提到，“配置列和行大小”（p.7），来使你的\textit{Application}控件的网格可伸缩。然而，那仅仅是不够的。
+
+思考下第二章讨论的小程序，“一个小程序”（p.2），这个程序只包含一个退出按钮。如果你运行此程序，并调整窗口大小，按钮会保持同样的尺寸，并居中于窗口。
+
+以下是小程序内.\_\_createWidgets()方法的替代版本。在这个版本中，退出按钮总是填满可用空间。
+\begin{lstlisting}[language=python]
+def createWidgets(self):
+	top=self.winfo_toplevel()					1
+	top.rowconfigure(0,weight=1)	   				2
+	top.columnconfigure(0,weight=1)					3
+	self.rowconfigure(0,weight=1)					4
+	self.columnconfigure(0,weight=1)				5
+	self.quit=Button (self, text=”Quit”, command=self.quit )
+	self.quit.grid( row=0, column=0, sticky=N+S+E+W)		6
+\end{lstlisting}
+\begin{enumerate}
+\item “top level window''是屏幕上最顶层的窗口。但是，这个窗口不是\textit{Application}的窗口——它是\textit{Application}实例的父级。要获取顶层窗口，在程序中的任何控件上调用.winfo\_toplevel()方法。参看章节，“通用控件方法”（p.97）。
+\item 本行代码使top level window的0列网格可伸展。 
+\item 本行代码使顶层窗口的0列网格可伸展。
+\item 使0行的\textit{Application}控件的网格可伸展。
+\item 使0列的\textit{Application}控件的网格可伸展
+\item 参数sticky=tk.N+tk.S+tk.E+tk.W使按钮展开填满它所占的单元格
+\end{enumerate}
+还必须作出一个变化。在构造函数中，如下显示的改变第二行：
+\begin{lstlisting}[language=python]
+def __init__(self,master=None):
+	Frame.__init__(self,master)
+	self.grid(sticky=tk.N+tk.S+tk.E+tk.W)
+	self.createWidgets()
+\end{lstlisting}
+sticky=tk.N+tk.S+tk.E+tk.W参数对self.grid()是必要的，因此\textit{Application}控件将会展开填充它所在top-level window网格的单元格。
+

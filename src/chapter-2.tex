@@ -1,0 +1,43 @@
+%第二章
+\thispagestyle{fancy}
+\chapter[一个小程序]{一个小程序}
+下面是一个只含有一个推出按钮的\textit{Tkinter}小程序
+\begin{lstlisting}[language=python]
+#!/usr/bin/env python					1
+import Tkinter as tk 					2
+class Application(tk.Frame): 				3
+	def __init__(self, master=None):	
+		tk.Frame.__init__(self, master) 	4
+		self.grid() 				5
+		self.createWidgets()
+	def createWidgets(self):
+		self.quitButton = tk.Button(self, text='Quit',
+			command=self.quit) 		6
+		self.quitButton.grid() 			7
+app = Application() 					8
+app.master.title('Sample application') 			9
+app.mainloop()						10
+\end{lstlisting}
+\begin{enumerate}
+\item %1
+假如你的系统中已正确安装Python，该行将会使脚本自动执行。
+\item %2
+该行将\textit{Tkinter}模块导入到程序的命名空间，但重命名为tk。
+\item %3
+你的程序的类必须从\textit{Tkinter}的Frame类继承。
+\item %4
+调用父类Frame的构造函数。
+\item %5
+必须让程序真正显示在屏幕上。
+\item %6
+创建一个按钮，标记为“Quit”。
+\item %7
+将按钮放入程序中
+\item %8
+通过实例化Application类启动主程序
+\item %9
+这个方法将窗口的title设为''Sample application''。
+\item %10
+启动程序的主程，等待鼠标和键盘事件。
+
+\end{enumerate}
